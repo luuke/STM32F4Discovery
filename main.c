@@ -60,17 +60,104 @@ void SysTick_Handler(void){
 	}
 }
 
-int main(void){
-	SysTickInit();
-	TIM4Init();
-	LEDInit();
-	
+void TIM3PWMInit(){
 	GPIOD->MODER |= GPIO_MODER_MODER13_1;
 	GPIOD->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR13_1;
 	GPIOD->AFR[1] |= 0x00200000;
 	TIM4->CCER |= TIM_CCER_CC2E;
 	TIM4->CCMR1 |= TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2;
 	TIM4->CCR2 = 0;
+}
+
+void SPI1Init(){
+//change NSS pin GPIO init if not working!!
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; //enabling SPI1 clock
+	SPI1->CR2 |= SPI_CR2_SSOE;
+	SPI1->CR1 |= SPI_CR1_SSM
+						|  SPI_CR1_SSI
+						|  SPI_CR1_BR_0
+						|  SPI_CR1_BR_1
+						|  SPI_CR1_CPHA
+						|  SPI_CR1_CPOL
+						|  SPI_CR1_MSTR
+						|  SPI_CR1_SPE;
+}
+void SPI1SendCommand(uint8_t cmd){
+	GPIOA->BSRRH = GPIO_BSRR_BS_6; //A0=0 -> sending command
+	GPIOA->BSRRH = GPIO_BSRR_BS_4; // nCS1B=0
+	SPI1->DR = cmd;
+	while(!(SPI1->SR & SPI_SR_TXE));
+	while(!(SPI1->SR & SPI_SR_BSY));
+//here add waiting for BSY = 0 if not working!!!
+	GPIOA->BSRRL = GPIO_BSRR_BS_4; // nCS1B=1
+}
+
+void SPI1SendData(uint8_t data){
+	GPIOA->BSRRL = GPIO_BSRR_BS_6; //A0=1 -> sending display data
+	GPIOA->BSRRH = GPIO_BSRR_BS_4; // nCS1B=0
+	SPI1->DR = data;
+	while(!(SPI1->SR & SPI_SR_TXE));
+//here add waiting for BSY = 0 if not working!!!
+	GPIOA->BSRRL = GPIO_BSRR_BS_4; // nCS1B=1
+}
+
+void LCDInit(){
+	/*
+	 * 		 SI - PA7 - AF  - PP
+	 * 		 A0 - PA6 - OUT - PP
+	 * 	  SCL - PA5 - AF  -	PP
+	 *  nCS1B - PA4 - OUT - PU
+	 * nRESET - PA3 - OUT - PU
+	 */
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;	//enabling PORT A clock
+	GPIOA->MODER |= GPIO_MODER_MODER3_0		//PA3 as output
+							 |  GPIO_MODER_MODER4_0		//PA4 as output
+							 |	GPIO_MODER_MODER5_1		//PA5 as alternate function
+							 |	GPIO_MODER_MODER6_0		//PA6 as output
+							 |	GPIO_MODER_MODER7_1;	//PA7 as alternate function
+	GPIOA->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR3_1	//all speed 50MHz
+								 |  GPIO_OSPEEDER_OSPEEDR4_1
+								 |	GPIO_OSPEEDER_OSPEEDR5_1
+								 |	GPIO_OSPEEDER_OSPEEDR6_1
+								 |	GPIO_OSPEEDER_OSPEEDR7_1;
+	GPIOA->PUPDR |= GPIO_PUPDR_PUPDR3_0		//PA3 pull-up
+							 |	GPIO_PUPDR_PUPDR4_0;	//PA4 pull-up			
+	GPIOA->AFR[0] |= 0x50500000; //PA7 and PA5 alternate function AF5 (SPI1)
+	GPIOA->BSRRL = GPIO_BSRR_BS_3
+							 | GPIO_BSRR_BS_4;
+	
+	SPI1Init();
+	
+	SPI1SendCommand(0x40);
+	SPI1SendCommand(0xA1);
+	SPI1SendCommand(0xC0);
+	SPI1SendCommand(0xA6);
+	SPI1SendCommand(0xA2);
+	SPI1SendCommand(0x2F);
+	SPI1SendCommand(0xF8);
+	SPI1SendCommand(0x00);
+	SPI1SendCommand(0x27);
+	SPI1SendCommand(0x81);
+	SPI1SendCommand(0x16);
+	SPI1SendCommand(0xAC);
+	SPI1SendCommand(0x00);
+	SPI1SendCommand(0xAF);
+	
+	
+	//Displaying test
+	SPI1SendCommand(0xB0);
+	SPI1SendCommand(0x10);
+	SPI1SendCommand(0x00);
+	SPI1SendData(0xFF);
+	SPI1SendCommand(0xA5);
+}
+
+int main(void){
+	LEDInit();
+	SysTickInit();
+	//TIM4Init();
+	//TIM3PWMInit();
+	//LCDInit(); //not working
 	
 	//if(RCC->CR & RCC_CR_HSIRDY) GPIOD->BSRRL = GPIO_BSRR_BS_13;
 	//if(RCC->CR & RCC_CR_HSERDY) GPIOD->BSRRL = GPIO_BSRR_BS_12;

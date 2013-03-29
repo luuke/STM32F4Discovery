@@ -1,4 +1,4 @@
---cpu Cortex-M4.fp "startup_stm32f4xx.o" "system_stm32f4xx.o" "main.o" 
+--cpu Cortex-M4.fp "startup_stm32f4xx.o" "system_stm32f4xx.o" "main.o" "dogm128-6_lcd.o" 
 --ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
 --info sizes --info totals --info unused --info veneers 
  --list ".\stm32f4discovery.map" -o stm32f4discovery.axf

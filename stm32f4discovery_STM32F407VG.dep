@@ -8,7 +8,7 @@ I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5087AFDE)
 I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5087AFDE)
 I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x5087AFDE)
 I (system_stm32f4xx.h)(0x4F54BBBA)
-F (.\main.c)(0x5151E042)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -o "main.o" --omf_browse "main.crf" --depend "main.d")
+F (.\main.c)(0x5155D8C6)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -o "main.o" --omf_browse "main.crf" --depend "main.d")
 I (stm32f4xx.h)(0x51508490)
 I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x5087AFDE)
 I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F9C3C0)
@@ -16,5 +16,7 @@ I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5087AFDE)
 I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5087AFDE)
 I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x5087AFDE)
 I (system_stm32f4xx.h)(0x4F54BBBA)
+F (.\dogm128-6_lcd.c)(0x51538E50)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -o "dogm128-6_lcd.o" --omf_browse "dogm128-6_lcd.crf" --depend "dogm128-6_lcd.d")
 F (.\system_stm32f4xx.h)(0x4F54BBBA)()
 F (.\stm32f4xx.h)(0x51508490)()
+F (.\dogm128-6_lcd.h)(0x515390BB)()

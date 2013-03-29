@@ -406,6 +406,11 @@
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
             </File>
+            <File>
+              <FileName>dogm128-6_lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\dogm128-6_lcd.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -420,6 +425,11 @@
               <FileName>stm32f4xx.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\stm32f4xx.h</FilePath>
+            </File>
+            <File>
+              <FileName>dogm128-6_lcd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\dogm128-6_lcd.h</FilePath>
             </File>
           </Files>
         </Group>
