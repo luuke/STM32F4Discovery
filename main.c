@@ -1,7 +1,8 @@
 #include "stm32f4xx.h"
 
-int i = 0;
-int j = 0;
+volatile int i = 0;
+volatile int j = 0;
+volatile int adcData = 0;
 
 void LEDInit(void){
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
@@ -45,8 +46,8 @@ void TIM4_IRQHandler(void){
 		j = 0;
 	}
 		
-	TIM4->CCR2++;
-	if(TIM4->CCR2 == 1999) TIM4->CCR2 = 0;
+	//TIM4->CCR2++;
+	//if(TIM4->CCR2 == 1999) TIM4->CCR2 = 0;
 }
 
 void SysTick_Handler(void){
@@ -60,7 +61,7 @@ void SysTick_Handler(void){
 	}
 }
 
-void TIM3PWMInit(){
+void TIM4PWMInit(){
 	GPIOD->MODER |= GPIO_MODER_MODER13_1;
 	GPIOD->OSPEEDR |= GPIO_OSPEEDER_OSPEEDR13_1;
 	GPIOD->AFR[1] |= 0x00200000;
@@ -152,17 +153,38 @@ void LCDInit(){
 	SPI1SendCommand(0xA5);
 }
 
+void ADCInit(){
+	//GPIOA init if ADC not working
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+	GPIOA->MODER |= GPIO_MODER_MODER1; 
+	NVIC_EnableIRQ(ADC_IRQn);
+	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
+	ADC->CCR |= ADC_CCR_ADCPRE_1;
+	ADC1->SQR3 |= ADC_SQR3_SQ1_0;
+	ADC1->CR2 |= ADC_CR2_CONT;
+	ADC1->CR2 |= ADC_CR2_EOCS;
+	ADC1->CR1 |= ADC_CR1_EOCIE;
+	ADC1->CR2 |= ADC_CR2_ADON;
+	ADC1->CR2 |= ADC_CR2_SWSTART;
+}
+
+void ADC_IRQHandler(void){
+	adcData = ADC1->DR;
+	adcData /= 20;
+	
+	TIM4->CCR2 = adcData ;
+	
+}
+
 int main(void){
 	LEDInit();
 	SysTickInit();
-	//TIM4Init();
-	//TIM3PWMInit();
+	TIM4Init();
+	TIM4PWMInit();
 	//LCDInit(); //not working
+	ADCInit();
 	
-	//if(RCC->CR & RCC_CR_HSIRDY) GPIOD->BSRRL = GPIO_BSRR_BS_13;
-	//if(RCC->CR & RCC_CR_HSERDY) GPIOD->BSRRL = GPIO_BSRR_BS_12;
 	while(1){
 		
 	}
-	return 0;
 }

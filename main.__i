@@ -2,4 +2,4 @@
 -I C:\Keil\ARM\RV31\INC 
 -I C:\Keil\ARM\CMSIS\Include 
 -I C:\Keil\ARM\Inc\ST\STM32F4xx 
--o "dogm128-6_lcd.o" --omf_browse "dogm128-6_lcd.crf" --depend "dogm128-6_lcd.d" "dogm128-6_lcd.c"
+-o "main.o" --omf_browse "main.crf" --depend "main.d" "main.c"
